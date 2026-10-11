@@ -1,0 +1,15 @@
+[project]
+name = "atividade-1-regressao"
+version = "0.1.0"
+description = "ACH2036 Activity 1: simple linear regression, residual analysis and scale transformations"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "scipy",
+    "statsmodels",
+]
+
+[tool.uv]
+package = false
