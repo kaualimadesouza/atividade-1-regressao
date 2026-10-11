@@ -1,0 +1,458 @@
+\documentclass[a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{left=1.5cm, right=1.5cm, top=2.54cm, bottom=2.54cm}
+\usepackage{graphicx, setspace, amsmath, amssymb, titlesec, fancyhdr, parskip, indentfirst, etoolbox, caption, cite, xcolor}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage[brazil]{babel}
+
+\addto\captionsbrazil{
+  \renewcommand{\refname}{Referências}
+}
+
+% Title Formatting
+\titleformat{\section}{\centering\large\scshape}{\thesection}{1em}{}
+
+\setstretch{1.0}
+\setlength{\parskip}{6pt}
+
+\titlespacing{\section}{0pt}{6pt}{6pt}
+\titlespacing{\subsection}{0pt}{6pt}{6pt}
+\titlespacing{\subsubsection}{0pt}{6pt}{6pt}
+
+% Document Title
+\title{
+    \textbf{Atividade 1 - Modelos de Regressão:\\Análise de resíduos e transformações de escala}
+}
+
+\date{}
+
+\captionsetup{labelfont={small,sc}, textfont={small,sc}}
+
+% Section Numbering
+\renewcommand{\thesection}{\Roman{section}.}
+\renewcommand{\thesubsection}{\textit{\Alph{subsection}.}}
+\renewcommand{\thesubsubsection}{\textit{\arabic{subsubsection}.}}
+\renewcommand{\thetable}{\Roman{table}}
+\renewcommand{\thefigure}{\Roman{figure}}
+
+% Make titles italic as well
+\titleformat{\subsection}
+    {\normalfont\large\itshape}
+    {\thesubsection}
+    {1em}
+    {}
+
+\titleformat{\subsubsection}
+    {\normalfont\itshape}
+    {\thesubsubsection}
+    {1em}
+    {}
+
+\setcounter{page}{1}
+
+% Fancy Header Configuration
+\pagestyle{fancy}
+\fancyhf{}
+
+% First Page Header
+\fancypagestyle{firstpage}{
+    \fancyhead[C]{
+        \centering
+        {\fontsize{14pt}{10pt}\selectfont
+        \textbf{Universidade de São Paulo}\\[0.5em]
+        \textbf{ACH2036 - Métodos Quantitativos para Análise Multivariada}}\\[0.2em]
+        {\fontsize{8pt}{10pt}\selectfont
+        \textbf{Prof. Doutor:} Marcelo de Souza Lauretto \hspace{1cm}
+        \textbf{Ano:} 2° Semestre/2026}
+    }
+}
+
+% Default Header for Other Pages
+\fancyhead[C]{
+    \textbf{Escola de Artes, Ciências e Humanidades - Universidade de São Paulo}
+}
+
+% Red placeholders mark what still has to be written; none may survive the submission
+\newcommand{\pendente}[1]{\textcolor{red}{\textit{[#1]}}}
+
+% Includes figuras/<file> when it exists, otherwise a framed placeholder with the expected path
+\newcommand{\figura}[4][0.6\textwidth]{%
+    \begin{figure}[H]
+        \centering
+        \IfFileExists{figuras/#2}
+            {\includegraphics[width=#1]{figuras/#2}}
+            {\fbox{\parbox[c][4cm][c]{#1}{\centering\textcolor{red}{\texttt{\detokenize{figuras/#2}}}}}}
+        \caption{#3}
+        \label{fig:#4}
+    \end{figure}}
+
+% Same fallback for the statsmodels summary, saved as text with model.summary().as_text()
+\newcommand{\tabelaols}[3]{%
+    \begin{table}[H]
+        \centering
+        \IfFileExists{tabelas/#1}
+            {\begin{minipage}{12cm}\footnotesize\verbatiminput{tabelas/#1}\end{minipage}}
+            {\fbox{\parbox[c][3cm][c]{12cm}{\centering\textcolor{red}{\texttt{\detokenize{tabelas/#1}}}}}}
+        \caption{#2}
+        \label{tab:#3}
+    \end{table}}
+
+\begin{document}
+
+\maketitle
+\vspace{-1.5cm}
+\thispagestyle{firstpage}
+
+% =========================================================
+% INTEGRANTES
+% =========================================================
+
+\begin{multicols}{2}
+    \centering
+
+    \textbf{Kauã Lima de Souza}\\
+    15674702
+
+    \textbf{Victor Yodono}\\
+    13829040
+
+\end{multicols}
+
+\vspace{-0.2cm} % Ajuste de espaçamento vertical
+
+% =========================================================
+% CONTEÚDO
+% =========================================================
+
+\singlespacing
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0.5cm}
+
+\section{Introdução}
+
+Este relatório apresenta a análise de regressão linear simples sobre três conjuntos de dados (Treadwear, Alligators e ConcPatog), conforme proposto na Atividade 1 da disciplina. Para cada conjunto, ajustamos inicialmente o modelo sobre os dados originais e fizemos o diagnóstico do ajuste por meio da análise de resíduos, verificando as premissas LINE (função \textbf{L}inear, erros \textbf{I}ndependentes, distribuição \textbf{N}ormal e variância \textbf{E}gual). Em seguida, exploramos nove combinações de transformações de escala (raiz quadrada, quadrado e logaritmo na base 10, aplicados somente sobre $X$, somente sobre $Y$ ou sobre ambas) e repetimos a análise sob a combinação que produziu a melhor associação linear. Os conceitos e técnicas utilizados seguem as Seções 1 a 4 do material STAT501 \cite{stat501}.
+
+% =========================================================
+% TREADWEAR
+% =========================================================
+
+\section{Dataset Treadwear}
+
+O \textit{dataset} Treadwear, apresentado na Subseção 4.4 do STAT501 \cite{stat501}, relaciona a profundidade do sulco de pneus (\texttt{groove}, variável resposta $Y$) com a quilometragem rodada (\texttt{mileage}, variável preditora $X$).
+
+\subsection{Análise preliminar sobre os dados originais}
+
+\subsubsection{Gráfico de dispersão}
+
+\figura{treadwear_original_dispersao.png}{Dispersão entre groove e mileage (dados originais).}{treadwear-original-dispersao}
+
+\pendente{Existe indício visual de associação linear entre as variáveis? Se não, descrever a tendência, as concentrações dos pontos e a dispersão.}
+
+\subsubsection{Ajuste do modelo}
+
+\tabelaols{treadwear_original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{treadwear-original-ols}
+
+\pendente{Comentar o $R^2$ ajustado: com base nele, o modelo captura bem a variabilidade da variável resposta?}
+
+\figura{treadwear_original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{treadwear-original-icip}
+
+\subsubsection{Análise dos resíduos}
+
+O histograma dos resíduos não foi incluído para este \textit{dataset}, pois o tamanho reduzido da amostra não permite uma representação informativa da distribuição.
+
+\figura{treadwear_original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{treadwear-original-residuos-preditos}
+
+\figura{treadwear_original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{treadwear-original-qqplot}
+
+\subsubsection{Premissas LINE}
+
+\pendente{Com base nos gráficos, indicar quais premissas parecem válidas e quais parecem violadas.}
+
+\subsection{Exploração das transformações de escala}
+
+Para cada uma das nove combinações de transformações, avaliamos o gráfico de dispersão das variáveis transformadas. A Tabela~\ref{tab:treadwear-transformacoes} resume essa avaliação.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \small
+    \begin{tabular}{|l|c|c|p{7cm}|}
+        \hline
+        \textbf{Transformação} & \textbf{Aplicada em} & \textbf{$R^2$ ajustado} & \textbf{Associação linear (avaliação visual)} \\
+        \hline
+        Raiz quadrada & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Raiz quadrada & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Raiz quadrada & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+    \end{tabular}
+    \caption{Combinações de transformações testadas no dataset Treadwear.}
+    \label{tab:treadwear-transformacoes}
+\end{table}
+
+\pendente{Justificar a escolha da combinação com melhor associação linear.}
+
+\subsection{Análise da combinação escolhida}
+
+A combinação de transformações escolhida foi \pendente{transformação sobre $X$ e/ou $Y$}.
+
+\subsubsection{Gráfico de dispersão}
+
+\figura{treadwear_transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{treadwear-transformado-dispersao}
+
+\pendente{Comentar a associação linear após a transformação.}
+
+\subsubsection{Ajuste do modelo}
+
+\tabelaols{treadwear_transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{treadwear-transformado-ols}
+
+\pendente{Comentar o $R^2$ ajustado e compará-lo ao do modelo original.}
+
+\figura{treadwear_transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{treadwear-transformado-icip}
+
+\subsubsection{Análise dos resíduos}
+
+Assim como na análise preliminar, o histograma dos resíduos não foi incluído devido ao tamanho reduzido da amostra.
+
+\figura{treadwear_transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{treadwear-transformado-residuos-preditos}
+
+\figura{treadwear_transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{treadwear-transformado-qqplot}
+
+\subsubsection{Premissas LINE}
+
+\pendente{Indicar quais premissas passaram a ser atendidas, ainda que parcialmente, e quais continuam violadas.}
+
+% =========================================================
+% ALLIGATORS
+% =========================================================
+
+\section{Dataset Alligators}
+
+O \textit{dataset} Alligators, apresentado na Subseção 4.7 do STAT501 \cite{stat501}, relaciona o peso de jacarés (\texttt{weight}, variável resposta $Y$) com o seu comprimento (\texttt{length}, variável preditora $X$).
+
+\subsection{Análise preliminar sobre os dados originais}
+
+\subsubsection{Gráfico de dispersão}
+
+\figura{alligators_original_dispersao.png}{Dispersão entre weight e length (dados originais).}{alligators-original-dispersao}
+
+\pendente{Existe indício visual de associação linear entre as variáveis? Se não, descrever a tendência, as concentrações dos pontos e a dispersão.}
+
+\subsubsection{Ajuste do modelo}
+
+\tabelaols{alligators_original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{alligators-original-ols}
+
+\pendente{Comentar o $R^2$ ajustado: com base nele, o modelo captura bem a variabilidade da variável resposta?}
+
+\figura{alligators_original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{alligators-original-icip}
+
+\subsubsection{Análise dos resíduos}
+
+\figura{alligators_original_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados originais).}{alligators-original-histograma}
+
+\figura{alligators_original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{alligators-original-residuos-preditos}
+
+\figura{alligators_original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{alligators-original-qqplot}
+
+\subsubsection{Premissas LINE}
+
+\pendente{Com base nos gráficos, indicar quais premissas parecem válidas e quais parecem violadas.}
+
+\subsection{Exploração das transformações de escala}
+
+Para cada uma das nove combinações de transformações, avaliamos o gráfico de dispersão das variáveis transformadas. A Tabela~\ref{tab:alligators-transformacoes} resume essa avaliação.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \small
+    \begin{tabular}{|l|c|c|p{7cm}|}
+        \hline
+        \textbf{Transformação} & \textbf{Aplicada em} & \textbf{$R^2$ ajustado} & \textbf{Associação linear (avaliação visual)} \\
+        \hline
+        Raiz quadrada & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Raiz quadrada & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Raiz quadrada & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+    \end{tabular}
+    \caption{Combinações de transformações testadas no dataset Alligators.}
+    \label{tab:alligators-transformacoes}
+\end{table}
+
+\pendente{Justificar a escolha da combinação com melhor associação linear.}
+
+\subsection{Análise da combinação escolhida}
+
+A combinação de transformações escolhida foi \pendente{transformação sobre $X$ e/ou $Y$}.
+
+\subsubsection{Gráfico de dispersão}
+
+\figura{alligators_transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{alligators-transformado-dispersao}
+
+\pendente{Comentar a associação linear após a transformação.}
+
+\subsubsection{Ajuste do modelo}
+
+\tabelaols{alligators_transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{alligators-transformado-ols}
+
+\pendente{Comentar o $R^2$ ajustado e compará-lo ao do modelo original.}
+
+\figura{alligators_transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{alligators-transformado-icip}
+
+\subsubsection{Análise dos resíduos}
+
+\figura{alligators_transformado_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados transformados).}{alligators-transformado-histograma}
+
+\figura{alligators_transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{alligators-transformado-residuos-preditos}
+
+\figura{alligators_transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{alligators-transformado-qqplot}
+
+\subsubsection{Premissas LINE}
+
+\pendente{Indicar quais premissas passaram a ser atendidas, ainda que parcialmente, e quais continuam violadas.}
+
+% =========================================================
+% CONCPATOG
+% =========================================================
+
+\section{Dataset ConcPatog}
+
+O \textit{dataset} ConcPatog contém as concentrações de dois protozoários em água de esgoto tratado, medidas sob diferentes estações de tratamento, estágios de tratamento e meses do ano. O interesse é verificar se é possível estimar, com razoável acurácia, a concentração do patógeno 2 (\texttt{CPatog2}, variável resposta $Y$) a partir da concentração do patógeno 1 (\texttt{CPatog1}, variável preditora $X$).
+
+\subsection{Análise preliminar sobre os dados originais}
+
+\subsubsection{Gráfico de dispersão}
+
+\figura{concpatog_original_dispersao.png}{Dispersão entre CPatog2 e CPatog1 (dados originais).}{concpatog-original-dispersao}
+
+\pendente{Existe indício visual de associação linear entre as variáveis? Se não, descrever a tendência, as concentrações dos pontos e a dispersão.}
+
+\subsubsection{Ajuste do modelo}
+
+\tabelaols{concpatog_original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{concpatog-original-ols}
+
+\pendente{Comentar o $R^2$ ajustado: com base nele, o modelo captura bem a variabilidade da variável resposta?}
+
+\figura{concpatog_original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{concpatog-original-icip}
+
+\subsubsection{Análise dos resíduos}
+
+\figura{concpatog_original_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados originais).}{concpatog-original-histograma}
+
+\figura{concpatog_original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{concpatog-original-residuos-preditos}
+
+\figura{concpatog_original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{concpatog-original-qqplot}
+
+\subsubsection{Premissas LINE}
+
+\pendente{Com base nos gráficos, indicar quais premissas parecem válidas e quais parecem violadas.}
+
+\subsection{Exploração das transformações de escala}
+
+Para cada uma das nove combinações de transformações, avaliamos o gráfico de dispersão das variáveis transformadas. A Tabela~\ref{tab:concpatog-transformacoes} resume essa avaliação.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \small
+    \begin{tabular}{|l|c|c|p{7cm}|}
+        \hline
+        \textbf{Transformação} & \textbf{Aplicada em} & \textbf{$R^2$ ajustado} & \textbf{Associação linear (avaliação visual)} \\
+        \hline
+        Raiz quadrada & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Raiz quadrada & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Raiz quadrada & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        Quadrado & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $X$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+        $\log_{10}$ & $X$ e $Y$ & \pendente{?} & \pendente{?} \\
+        \hline
+    \end{tabular}
+    \caption{Combinações de transformações testadas no dataset ConcPatog.}
+    \label{tab:concpatog-transformacoes}
+\end{table}
+
+\pendente{Justificar a escolha da combinação com melhor associação linear.}
+
+\subsection{Análise da combinação escolhida}
+
+A combinação de transformações escolhida foi \pendente{transformação sobre $X$ e/ou $Y$}.
+
+\subsubsection{Gráfico de dispersão}
+
+\figura{concpatog_transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{concpatog-transformado-dispersao}
+
+\pendente{Comentar a associação linear após a transformação.}
+
+\subsubsection{Ajuste do modelo}
+
+\tabelaols{concpatog_transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{concpatog-transformado-ols}
+
+\pendente{Comentar o $R^2$ ajustado e compará-lo ao do modelo original. O modelo permite estimar CPatog2 com razoável acurácia?}
+
+\figura{concpatog_transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{concpatog-transformado-icip}
+
+\subsubsection{Análise dos resíduos}
+
+\figura{concpatog_transformado_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados transformados).}{concpatog-transformado-histograma}
+
+\figura{concpatog_transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{concpatog-transformado-residuos-preditos}
+
+\figura{concpatog_transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{concpatog-transformado-qqplot}
+
+\subsubsection{Premissas LINE}
+
+\pendente{Indicar quais premissas passaram a ser atendidas, ainda que parcialmente, e quais continuam violadas.}
+
+\begin{thebibliography}{99}
+
+\bibitem{stat501}
+THE PENNSYLVANIA STATE UNIVERSITY. \textbf{STAT 501: Regression Methods}. University Park: Eberly College of Science. Disponível em: \url{https://online.stat.psu.edu/stat501/}. Acesso em: 11 out. 2026.
+
+\end{thebibliography}
+
+\end{document}
