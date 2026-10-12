@@ -21,7 +21,7 @@ envia).
 | [`data/`](data) | Datasets da atividade (tabela abaixo) |
 | [`src/atividade_1_regressao/`](src/atividade_1_regressao) | A análise: `datasets.py` (os 3 datasets e seus estágios), `variables.py` (X, Y e as 9 transformações), `regression.py` (ajuste OLS e comparação das 9), `figures.py` (os gráficos), `style.py` (o visual, compartilhado com o guia) e `report.py` (grava tudo em `outputs/`) |
 | [`outputs/`](outputs) | Figuras e tabelas geradas, uma pasta por dataset; o relatório lê daqui |
-| [`entrega_final/`](entrega_final) | Relatório LaTeX e o PDF compilado |
+| [`entrega_final/`](entrega_final) | Relatório LaTeX em duas versões, 1 coluna (`atividade1_MQAM_2026`) e 2 colunas (`_2colunas`), com os PDFs. O texto fica só em `conteudo.tex` e o visual comum em `preambulo.tex`, então uma edição vale para as duas |
 
 ## Datasets
 
@@ -43,6 +43,7 @@ uv sync                                          # Python + dependências + paco
 uv run python -m atividade_1_regressao          # gera tudo dos 3 datasets em outputs/
 uv run python docs/scripts/make_figures.py       # regera as figuras do guia
 cd entrega_final && pdflatex atividade1_MQAM_2026.tex   # compila o relatório (rode 2x)
+pdflatex atividade1_MQAM_2026_2colunas.tex               # a versão em 2 colunas (rode 2x)
 ```
 
 Para cada dataset, o comando grava em `outputs/<dataset>/` a dispersão, o resumo OLS, a reta

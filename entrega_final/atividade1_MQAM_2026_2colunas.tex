@@ -1,0 +1,75 @@
+\documentclass[a4paper]{article}
+
+\input{preambulo}
+
+% Two columns. Plots, the R² table, the prose and the LINE lists sit in a column; the statsmodels
+% summaries (lines up to 91 characters) and the 3x3 grid of step 3.2 float to the top of the next
+% page at full width, so the text keeps filling the current one instead of leaving a gap
+\usepackage{enumitem}
+\setlength{\columnsep}{0.7cm}
+\raggedcolumns
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}  % with 95% wide plots, halves the blank at column ends
+\setlist[description]{leftmargin=1em, labelindent=0pt, itemsep=2pt, topsep=4pt}
+% Narrow columns otherwise hyphenate a reference such as "Figura XX-VIII"
+\renewcommand{\thefigure}{\mbox{\Roman{figure}}}
+\renewcommand{\thetable}{\mbox{\Roman{table}}}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\dblfloatpagefraction}{0.8}
+
+% Closes the columns (multicol balances them), sets #1 across the page, then reopens them
+\newcommand{\larguratotal}[1]{\end{multicols}#1\begin{multicols}{2}}
+
+% Same placeholder fallback as the one-column version, almost a column wide by default
+\newcommand{\figura}[4][0.95\columnwidth]{%
+    \begin{figure}[H]
+        \centering
+        \IfFileExists{../outputs/#2}
+            {\includegraphics[width=#1]{../outputs/#2}}
+            {\fbox{\parbox[c][4cm][c]{#1}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#2}}}}}}
+        \caption{#3}
+        \label{fig:#4}
+    \end{figure}}
+
+\newcommand{\figuralarga}[3]{%
+    \begin{figure*}[t]
+        \centering
+        \IfFileExists{../outputs/#1}
+            {\includegraphics[width=0.8\textwidth]{../outputs/#1}}
+            {\fbox{\parbox[c][4cm][c]{0.8\textwidth}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#1}}}}}}
+        \caption{#2}
+        \label{fig:#3}
+    \end{figure*}}
+
+\newcommand{\tabelaols}[3]{%
+    \begin{table*}[t]
+        \centering
+        \IfFileExists{../outputs/#1}
+            {\begin{minipage}{13.6cm}\footnotesize\verbatiminput{../outputs/#1}\end{minipage}}
+            {\fbox{\parbox[c][3cm][c]{13.6cm}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#1}}}}}}
+        \caption{#2}
+        \label{tab:#3}
+    \end{table*}}
+
+\newcommand{\tabelatransf}[3]{%
+    \begin{table}[H]
+        \centering
+        \renewcommand{\arraystretch}{1.2}
+        \footnotesize
+        \IfFileExists{../outputs/#1}
+            {\input{../outputs/#1}}
+            {\fbox{\parbox[c][3cm][c]{\columnwidth}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#1}}}}}}
+        \caption{#2}
+        \label{tab:#3}
+    \end{table}}
+
+\newcommand{\dataset}[1]{\larguratotal{\section{Dataset #1}}}
+
+\begin{document}
+
+\capa
+
+\begin{multicols}{2}
+\input{conteudo}
+\end{multicols}
+
+\end{document}
