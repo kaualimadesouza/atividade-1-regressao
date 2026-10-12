@@ -24,7 +24,8 @@ class Fit:
 
     def bands(self, x: np.ndarray) -> pd.DataFrame:
         """Line value plus 95% IC (mean) and IP (new point) at each x, as statsmodels names them."""
-        return self.model.get_prediction(sm.add_constant(x)).summary_frame(alpha=0.05)
+        # has_constant="add": with a single x the column looks constant and would be skipped
+        return self.model.get_prediction(sm.add_constant(x, has_constant="add")).summary_frame(alpha=0.05)
 
 
 @dataclass(frozen=True)
