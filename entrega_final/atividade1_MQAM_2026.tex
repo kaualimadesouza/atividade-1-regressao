@@ -82,13 +82,13 @@
 % Red placeholders mark what still has to be written; none may survive the submission
 \newcommand{\pendente}[1]{\textcolor{red}{\textit{[#1]}}}
 
-% Includes figuras/<file> when it exists, otherwise a framed placeholder with the expected path
+% Includes ../outputs/<dataset>/<file> when it exists, otherwise a framed placeholder with the expected path
 \newcommand{\figura}[4][0.6\textwidth]{%
     \begin{figure}[H]
         \centering
-        \IfFileExists{figuras/#2}
-            {\includegraphics[width=#1]{figuras/#2}}
-            {\fbox{\parbox[c][4cm][c]{#1}{\centering\textcolor{red}{\texttt{\detokenize{figuras/#2}}}}}}
+        \IfFileExists{../outputs/#2}
+            {\includegraphics[width=#1]{../outputs/#2}}
+            {\fbox{\parbox[c][4cm][c]{#1}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#2}}}}}}
         \caption{#3}
         \label{fig:#4}
     \end{figure}}
@@ -97,9 +97,9 @@
 \newcommand{\tabelaols}[3]{%
     \begin{table}[H]
         \centering
-        \IfFileExists{tabelas/#1}
-            {\begin{minipage}{12cm}\footnotesize\verbatiminput{tabelas/#1}\end{minipage}}
-            {\fbox{\parbox[c][3cm][c]{12cm}{\centering\textcolor{red}{\texttt{\detokenize{tabelas/#1}}}}}}
+        \IfFileExists{../outputs/#1}
+            {\begin{minipage}{12cm}\footnotesize\verbatiminput{../outputs/#1}\end{minipage}}
+            {\fbox{\parbox[c][3cm][c]{12cm}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#1}}}}}}
         \caption{#2}
         \label{tab:#3}
     \end{table}}
@@ -145,31 +145,29 @@ Este relatório apresenta a análise de regressão linear simples sobre três co
 
 \section{Dataset Treadwear}
 
-O \textit{dataset} Treadwear, apresentado na Subseção 4.4 do STAT501 \cite{stat501}, relaciona a profundidade do sulco de pneus (\texttt{groove}, variável resposta $Y$) com a quilometragem rodada (\texttt{mileage}, variável preditora $X$).
-
 \subsection{Análise preliminar sobre os dados originais}
 
 \subsubsection{Gráfico de dispersão}
 
-\figura{treadwear_original_dispersao.png}{Dispersão entre groove e mileage (dados originais).}{treadwear-original-dispersao}
+\figura{treadwear/original_dispersao.png}{Dispersão entre groove e mileage (dados originais).}{treadwear-original-dispersao}
 
-\pendente{Existe indício visual de associação linear entre as variáveis? Se não, descrever a tendência, as concentrações dos pontos e a dispersão.}
+Sim, há forte associação negativa: quanto maior a quilometragem em milhas, menor a profundidade do groove, com pouca dispersão em torno da tendência. A tendência é ser uma curva, o groove cai cerca de 65 mils nas primeiras 4 mil milhas e só cerca de 13 a 15 nas últimas. Uma reta passaria abaixo dos pontos nos extremos e acima no meio, o que indica que a relação não é linear.
 
 \subsubsection{Ajuste do modelo}
 
-\tabelaols{treadwear_original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{treadwear-original-ols}
+\tabelaols{treadwear/original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{treadwear-original-ols}
 
 \pendente{Comentar o $R^2$ ajustado: com base nele, o modelo captura bem a variabilidade da variável resposta?}
 
-\figura{treadwear_original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{treadwear-original-icip}
+\figura{treadwear/original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{treadwear-original-icip}
 
 \subsubsection{Análise dos resíduos}
 
 O histograma dos resíduos não foi incluído para este \textit{dataset}, pois o tamanho reduzido da amostra não permite uma representação informativa da distribuição.
 
-\figura{treadwear_original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{treadwear-original-residuos-preditos}
+\figura{treadwear/original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{treadwear-original-residuos-preditos}
 
-\figura{treadwear_original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{treadwear-original-qqplot}
+\figura{treadwear/original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{treadwear-original-qqplot}
 
 \subsubsection{Premissas LINE}
 
@@ -218,25 +216,25 @@ A combinação de transformações escolhida foi \pendente{transformação sobre
 
 \subsubsection{Gráfico de dispersão}
 
-\figura{treadwear_transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{treadwear-transformado-dispersao}
+\figura{treadwear/transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{treadwear-transformado-dispersao}
 
 \pendente{Comentar a associação linear após a transformação.}
 
 \subsubsection{Ajuste do modelo}
 
-\tabelaols{treadwear_transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{treadwear-transformado-ols}
+\tabelaols{treadwear/transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{treadwear-transformado-ols}
 
 \pendente{Comentar o $R^2$ ajustado e compará-lo ao do modelo original.}
 
-\figura{treadwear_transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{treadwear-transformado-icip}
+\figura{treadwear/transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{treadwear-transformado-icip}
 
 \subsubsection{Análise dos resíduos}
 
 Assim como na análise preliminar, o histograma dos resíduos não foi incluído devido ao tamanho reduzido da amostra.
 
-\figura{treadwear_transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{treadwear-transformado-residuos-preditos}
+\figura{treadwear/transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{treadwear-transformado-residuos-preditos}
 
-\figura{treadwear_transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{treadwear-transformado-qqplot}
+\figura{treadwear/transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{treadwear-transformado-qqplot}
 
 \subsubsection{Premissas LINE}
 
@@ -254,25 +252,25 @@ O \textit{dataset} Alligators, apresentado na Subseção 4.7 do STAT501 \cite{st
 
 \subsubsection{Gráfico de dispersão}
 
-\figura{alligators_original_dispersao.png}{Dispersão entre weight e length (dados originais).}{alligators-original-dispersao}
+\figura{alligators/original_dispersao.png}{Dispersão entre weight e length (dados originais).}{alligators-original-dispersao}
 
 \pendente{Existe indício visual de associação linear entre as variáveis? Se não, descrever a tendência, as concentrações dos pontos e a dispersão.}
 
 \subsubsection{Ajuste do modelo}
 
-\tabelaols{alligators_original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{alligators-original-ols}
+\tabelaols{alligators/original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{alligators-original-ols}
 
 \pendente{Comentar o $R^2$ ajustado: com base nele, o modelo captura bem a variabilidade da variável resposta?}
 
-\figura{alligators_original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{alligators-original-icip}
+\figura{alligators/original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{alligators-original-icip}
 
 \subsubsection{Análise dos resíduos}
 
-\figura{alligators_original_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados originais).}{alligators-original-histograma}
+\figura{alligators/original_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados originais).}{alligators-original-histograma}
 
-\figura{alligators_original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{alligators-original-residuos-preditos}
+\figura{alligators/original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{alligators-original-residuos-preditos}
 
-\figura{alligators_original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{alligators-original-qqplot}
+\figura{alligators/original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{alligators-original-qqplot}
 
 \subsubsection{Premissas LINE}
 
@@ -321,25 +319,25 @@ A combinação de transformações escolhida foi \pendente{transformação sobre
 
 \subsubsection{Gráfico de dispersão}
 
-\figura{alligators_transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{alligators-transformado-dispersao}
+\figura{alligators/transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{alligators-transformado-dispersao}
 
 \pendente{Comentar a associação linear após a transformação.}
 
 \subsubsection{Ajuste do modelo}
 
-\tabelaols{alligators_transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{alligators-transformado-ols}
+\tabelaols{alligators/transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{alligators-transformado-ols}
 
 \pendente{Comentar o $R^2$ ajustado e compará-lo ao do modelo original.}
 
-\figura{alligators_transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{alligators-transformado-icip}
+\figura{alligators/transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{alligators-transformado-icip}
 
 \subsubsection{Análise dos resíduos}
 
-\figura{alligators_transformado_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados transformados).}{alligators-transformado-histograma}
+\figura{alligators/transformado_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados transformados).}{alligators-transformado-histograma}
 
-\figura{alligators_transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{alligators-transformado-residuos-preditos}
+\figura{alligators/transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{alligators-transformado-residuos-preditos}
 
-\figura{alligators_transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{alligators-transformado-qqplot}
+\figura{alligators/transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{alligators-transformado-qqplot}
 
 \subsubsection{Premissas LINE}
 
@@ -357,25 +355,25 @@ O \textit{dataset} ConcPatog contém as concentrações de dois protozoários em
 
 \subsubsection{Gráfico de dispersão}
 
-\figura{concpatog_original_dispersao.png}{Dispersão entre CPatog2 e CPatog1 (dados originais).}{concpatog-original-dispersao}
+\figura{concpatog/original_dispersao.png}{Dispersão entre CPatog2 e CPatog1 (dados originais).}{concpatog-original-dispersao}
 
 \pendente{Existe indício visual de associação linear entre as variáveis? Se não, descrever a tendência, as concentrações dos pontos e a dispersão.}
 
 \subsubsection{Ajuste do modelo}
 
-\tabelaols{concpatog_original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{concpatog-original-ols}
+\tabelaols{concpatog/original_ols.txt}{Resultados do ajuste por mínimos quadrados (dados originais).}{concpatog-original-ols}
 
 \pendente{Comentar o $R^2$ ajustado: com base nele, o modelo captura bem a variabilidade da variável resposta?}
 
-\figura{concpatog_original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{concpatog-original-icip}
+\figura{concpatog/original_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados originais).}{concpatog-original-icip}
 
 \subsubsection{Análise dos resíduos}
 
-\figura{concpatog_original_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados originais).}{concpatog-original-histograma}
+\figura{concpatog/original_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados originais).}{concpatog-original-histograma}
 
-\figura{concpatog_original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{concpatog-original-residuos-preditos}
+\figura{concpatog/original_residuos_preditos.png}{Resíduos vs. valores preditos (dados originais).}{concpatog-original-residuos-preditos}
 
-\figura{concpatog_original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{concpatog-original-qqplot}
+\figura{concpatog/original_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados originais).}{concpatog-original-qqplot}
 
 \subsubsection{Premissas LINE}
 
@@ -424,25 +422,25 @@ A combinação de transformações escolhida foi \pendente{transformação sobre
 
 \subsubsection{Gráfico de dispersão}
 
-\figura{concpatog_transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{concpatog-transformado-dispersao}
+\figura{concpatog/transformado_dispersao.png}{Dispersão entre as variáveis transformadas.}{concpatog-transformado-dispersao}
 
 \pendente{Comentar a associação linear após a transformação.}
 
 \subsubsection{Ajuste do modelo}
 
-\tabelaols{concpatog_transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{concpatog-transformado-ols}
+\tabelaols{concpatog/transformado_ols.txt}{Resultados do ajuste por mínimos quadrados (dados transformados).}{concpatog-transformado-ols}
 
 \pendente{Comentar o $R^2$ ajustado e compará-lo ao do modelo original. O modelo permite estimar CPatog2 com razoável acurácia?}
 
-\figura{concpatog_transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{concpatog-transformado-icip}
+\figura{concpatog/transformado_icip.png}{Reta de regressão com intervalos de confiança e de predição de 95\% (dados transformados).}{concpatog-transformado-icip}
 
 \subsubsection{Análise dos resíduos}
 
-\figura{concpatog_transformado_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados transformados).}{concpatog-transformado-histograma}
+\figura{concpatog/transformado_histograma.png}{Histograma dos resíduos com a densidade normal de referência (dados transformados).}{concpatog-transformado-histograma}
 
-\figura{concpatog_transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{concpatog-transformado-residuos-preditos}
+\figura{concpatog/transformado_residuos_preditos.png}{Resíduos vs. valores preditos (dados transformados).}{concpatog-transformado-residuos-preditos}
 
-\figura{concpatog_transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{concpatog-transformado-qqplot}
+\figura{concpatog/transformado_qqplot.png}{QQ-plot dos resíduos contra a distribuição normal (dados transformados).}{concpatog-transformado-qqplot}
 
 \subsubsection{Premissas LINE}
 
