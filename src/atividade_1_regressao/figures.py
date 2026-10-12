@@ -51,7 +51,7 @@ def histogram_figure(fit: Fit) -> Figure:
     ax.plot(grid, stats.norm.pdf(grid, loc=0, scale=spread), color=SERIES_2, linewidth=2, label="normal de referência")
     ax.set_xlabel("resíduo")
     ax.set_ylabel("densidade")
-    ax.legend(loc="upper left")
+    ax.legend(loc="best")  # skewed residuals put the tallest bar in any fixed corner
     return fig
 
 
