@@ -151,7 +151,7 @@ Este relatório apresenta a análise de regressão linear simples sobre três co
 
 \figura{treadwear/original_dispersao.png}{Dispersão entre groove e mileage (dados originais).}{treadwear-original-dispersao}
 
-Sim, há forte associação negativa: quanto maior a quilometragem em milhas, menor a profundidade do groove, com pouca dispersão em torno da tendência. A tendência é ser uma curva, o groove cai cerca de 65 mils nas primeiras 4 mil milhas e só cerca de 13 a 15 nas últimas. Uma reta passaria abaixo dos pontos nos extremos e acima no meio, o que indica que a relação não é linear.
+Só em parte: há forte associação negativa, que à primeira vista parece linear: quanto maior a quilometragem em milhas, menor a profundidade do groove, com pouca dispersão em torno da tendência. Olhando de perto, a tendência é ser uma curva, o groove cai cerca de 65 mils nas primeiras 4 mil milhas e só cerca de 13 a 15 nas últimas. Uma reta passaria abaixo dos pontos nos extremos e acima no meio, o que indica que a relação não é exatamente linear.
 
 \subsubsection{Ajuste do modelo}
 
@@ -254,7 +254,7 @@ O \textit{dataset} Alligators, apresentado na Subseção 4.7 do STAT501 \cite{st
 
 \figura{alligators/original_dispersao.png}{Dispersão entre weight e length (dados originais).}{alligators-original-dispersao}
 
-\pendente{Existe indício visual de associação linear entre as variáveis? Se não, descrever a tendência, as concentrações dos pontos e a dispersão.}
+Não, a associação é positiva, mas não linear: quanto maior o length, maior o weight, e o weight cresce cada vez mais rápido, num formato parecido com uma exponencial. Entre 58 e 94 de length, o weight sobe cerca de 3 por unidade; entre 94 e 147, cerca de 10. Os pontos se concentram nessa primeira faixa (22 dos 25 jacarés), com pouca dispersão, e só 3 jacarés grandes e pesados ficam isolados à direita, deixando a curva evidente.
 
 \subsubsection{Ajuste do modelo}
 
