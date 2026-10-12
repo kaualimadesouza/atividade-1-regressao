@@ -950,7 +950,7 @@ Para **cada** dataset (Treadwear, Alligators, ConcPatog):
    - [ ] Histograma (exceto Treadwear), resíduo vs predito, QQ-plot ([5](#5-diagnóstico-pelos-resíduos-stat501-lição-4))
    - [ ] LINE: quais valem, quais falham ([5.6](#56-checklist-line))
 2. **3.2 Transformações**
-   - [ ] 9 dispersões (não vão para o relatório) ([6.4](#64-testando-as-9-combinações))
+   - [ ] 9 dispersões, numa figura 3x3, com a tabela de R² ajustado ([6.4](#64-testando-as-9-combinações))
    - [ ] Escolher a combinação e justificar ([6.3](#63-transformar-x-y-ou-os-dois))
 3. **3.3 Combinação escolhida**
    - [ ] Dizer qual é
@@ -973,20 +973,22 @@ O que saber de cada um:
 
 | Dataset | n | Atenção |
 |---|---|---|
-| Treadwear | 9 | amostra minúscula: sem histograma; QQ-plot e testes com pouca força |
+| Treadwear | 9 | amostra minúscula: sem histograma no relatório; QQ-plot e testes com pouca força. **`mileage = 0` na 1ª linha** -> `log10 X` quebra ([6.6](#66-armadilhas-das-transformações)) |
 | Alligators | 25 | |
-| ConcPatog | 105 | **3 linhas com concentração 0** -> `log10` quebra ([6.6](#66-armadilhas-das-transformações)); medidas agrupadas por estação, estágio e mês -> pense na premissa **I** ([5.5](#55-independência)) |
+| ConcPatog | 105 | **3 linhas com `CPatog1 = 0`** -> `log10 X` quebra ([6.6](#66-armadilhas-das-transformações)); medidas agrupadas por estação, estágio e mês -> pense na premissa **I** ([5.5](#55-independência)) |
 
-Salvar com os nomes que o relatório espera. O `.tex` em `entrega_final/` puxa cada arquivo de `outputs/` sozinho ao recompilar. A dispersão já sai pronta com `uv run python -m atividade_1_regressao.scatter_plot` (gera os 3 datasets; para um só, troque `DatasetChoice.ALL` no `main`):
+Tudo abaixo sai pronto com `uv run python -m atividade_1_regressao`, para os 3 datasets. As combinações com `log10` de X removem as linhas com X = 0, e a escolhida de cada dataset fica no campo `chosen` de `datasets.py`. O `.tex` em `entrega_final/` puxa cada arquivo de `outputs/` sozinho ao recompilar:
 
 | Arquivo | Conteúdo |
 |---|---|
 | `outputs/<dataset>/<etapa>_dispersao.png` | dispersão |
 | `outputs/<dataset>/<etapa>_ols.txt` | `model.summary().as_text()` |
 | `outputs/<dataset>/<etapa>_icip.png` | reta + IC + IP |
-| `outputs/<dataset>/<etapa>_histograma.png` | histograma (não existe para treadwear) |
+| `outputs/<dataset>/<etapa>_histograma.png` | histograma (gerado para os 3; o relatório não usa o do treadwear) |
 | `outputs/<dataset>/<etapa>_residuos_preditos.png` | resíduo vs predito |
 | `outputs/<dataset>/<etapa>_qqplot.png` | QQ-plot |
+| `outputs/<dataset>/transformacoes.png` | as 9 dispersões transformadas, com R² ajustado e n |
+| `outputs/<dataset>/transformacoes.tex` | tabela LaTeX do R² ajustado das 9, com a escolhida em negrito |
 
 `<dataset>` = `treadwear`, `alligators` ou `concpatog`. `<etapa>` = `original` ou `transformado`.
 

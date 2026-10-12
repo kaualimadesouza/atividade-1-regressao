@@ -1,4 +1,4 @@
-"""The three datasets of Activity 1: where each file lives and which columns are X and Y."""
+"""The three datasets of Activity 1: where each file lives, which columns are X and Y, and the rescaling chosen."""
 
 from dataclasses import dataclass
 from enum import Enum
@@ -6,36 +6,40 @@ from pathlib import Path
 
 import pandas as pd
 
+from atividade_1_regressao.variables import Combination, Target, Transform, Variables
+
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
 OUTPUTS_DIR = ROOT / "outputs"
 
 
+class Stage(Enum):
+    """Raw data (step 3.1) or data after the chosen rescaling (step 3.3). Value = output file prefix."""
+
+    ORIGINAL = "original"
+    TRANSFORMED = "transformado"
+
+
 @dataclass(frozen=True)
-class DatasetSpec:
+class Dataset:
+    """One data file: how to read it, which columns are X and Y, and its chosen rescaling."""
+
+    slug: str
     file_name: str
     separator: str
     predictor: str
     response: str
+    chosen: Combination  # the step 3.2 pick, justified in the report
+
+    def load(self, stage: Stage) -> Variables:
+        """Read the file. TRANSFORMED -> apply `chosen` on top of the original X and Y."""
+        frame = pd.read_csv(DATA_DIR / self.file_name, sep=self.separator)
+        original = Variables(frame[self.predictor], frame[self.response])
+        return original if stage is Stage.ORIGINAL else self.chosen.apply(original)
 
 
-class Dataset(Enum):
-    TREADWEAR = DatasetSpec("treadwear.txt", "\t", predictor="mileage", response="groove")
-    ALLIGATORS = DatasetSpec("alligator.txt", r"\s+", predictor="length", response="weight")
-    CONCPATOG = DatasetSpec("ConcPatog.txt", "\t", predictor="CPatog1", response="CPatog2")
-
-    @property
-    def output_dir(self) -> Path:
-        return OUTPUTS_DIR / self.name.lower()
-
-
-class DatasetChoice(Enum):
-    # Separate from Dataset so ALL never reaches load_dataset as if it were a file.
-    TREADWEAR = (Dataset.TREADWEAR,)
-    ALLIGATORS = (Dataset.ALLIGATORS,)
-    CONCPATOG = (Dataset.CONCPATOG,)
-    ALL = tuple(Dataset)
-
-
-def load_dataset(dataset: Dataset) -> pd.DataFrame:
-    return pd.read_csv(DATA_DIR / dataset.value.file_name, sep=dataset.value.separator)
+DATASETS = (
+    Dataset("treadwear", "treadwear.txt", "\t", "mileage", "groove", Combination(Transform.LOG10, Target.Y)),
+    Dataset("alligators", "alligator.txt", r"\s+", "length", "weight", Combination(Transform.LOG10, Target.Y)),
+    Dataset("concpatog", "ConcPatog.txt", "\t", "CPatog1", "CPatog2", Combination(Transform.LOG10, Target.BOTH)),
+)

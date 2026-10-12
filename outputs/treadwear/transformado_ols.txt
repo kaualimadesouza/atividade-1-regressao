@@ -1,0 +1,25 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          log10(groove)   R-squared:                       0.993
+Model:                            OLS   Adj. R-squared:                  0.992
+Method:                 Least Squares   F-statistic:                     976.3
+Date:                Sun, 11 Oct 2026   Prob (F-statistic):           8.88e-09
+Time:                        23:22:14   Log-Likelihood:                 27.570
+No. Observations:                   9   AIC:                            -51.14
+Df Residuals:                       7   BIC:                            -50.75
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          2.5736      0.008    326.576      0.000       2.555       2.592
+mileage       -0.0129      0.000    -31.246      0.000      -0.014      -0.012
+==============================================================================
+Omnibus:                        2.879   Durbin-Watson:                   1.033
+Prob(Omnibus):                  0.237   Jarque-Bera (JB):                1.551
+Skew:                           0.984   Prob(JB):                        0.461
+Kurtosis:                       2.489   Cond. No.                         35.2
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.

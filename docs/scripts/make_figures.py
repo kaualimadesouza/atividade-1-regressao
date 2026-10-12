@@ -13,25 +13,17 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import statsmodels.formula.api as smf
-from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from scipy import stats
-from statsmodels.regression.linear_model import RegressionResultsWrapper
+
+from atividade_1_regressao.figures import draw_qq, histogram_figure, icip_figure, qqplot_figure, residuals_figure, scatter_figure
+from atividade_1_regressao.regression import Fit
+from atividade_1_regressao.style import INK, INK_SECONDARY, MUTED, RC, SERIES_1, SERIES_2, scatter, zero_line
+from atividade_1_regressao.variables import Variables
 
 DOCS = Path(__file__).resolve().parents[1]
 IMG = DOCS / "img"
 HOSPITAL = DOCS / "data" / "hospitalinfct_reg1and2.txt"
-
-# Validated categorical pair (dataviz reference palette, slots 1 and 2) plus neutral chrome
-SERIES_1 = "#2a78d6"
-SERIES_2 = "#eb6834"
-SURFACE = "#fcfcfb"
-INK = "#0b0b0b"
-INK_SECONDARY = "#52514e"
-MUTED = "#898781"
-GRID = "#e1e0d9"
-AXIS = "#c3c2b7"
 
 
 @dataclass(frozen=True)
@@ -41,47 +33,11 @@ class Scenario:
     y: np.ndarray
 
 
-def apply_style() -> None:
-    plt.rcParams.update(
-        {
-            "figure.facecolor": SURFACE,
-            "axes.facecolor": SURFACE,
-            "savefig.facecolor": SURFACE,
-            "axes.edgecolor": AXIS,
-            "axes.labelcolor": INK_SECONDARY,
-            "axes.titlecolor": INK,
-            "axes.titlesize": 11,
-            "axes.labelsize": 10,
-            "axes.spines.top": False,
-            "axes.spines.right": False,
-            "axes.grid": True,
-            "grid.color": GRID,
-            "grid.linewidth": 0.8,
-            "grid.linestyle": "-",
-            "xtick.color": MUTED,
-            "ytick.color": MUTED,
-            "xtick.labelcolor": INK_SECONDARY,
-            "ytick.labelcolor": INK_SECONDARY,
-            "legend.frameon": False,
-            "legend.fontsize": 9,
-            "font.family": "DejaVu Sans",
-        }
-    )
-
-
 def save(fig: Figure, name: str) -> None:
     fig.tight_layout()
     fig.savefig(IMG / name, dpi=150)
     plt.close(fig)
     print(f"docs/img/{name}")
-
-
-def scatter(ax: Axes, x: np.ndarray, y: np.ndarray, label: str | None = None) -> None:
-    ax.scatter(x, y, s=36, color=SERIES_1, edgecolor=SURFACE, linewidth=1, zorder=3, label=label)
-
-
-def zero_line(ax: Axes) -> None:
-    ax.axhline(0, color=INK_SECONDARY, linewidth=1, zorder=2)
 
 
 def fit_line(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:
@@ -135,74 +91,18 @@ def load_hospital() -> pd.DataFrame:
     return pd.read_csv(HOSPITAL, sep="\t")
 
 
-def plot_hospital_scatter(df: pd.DataFrame) -> None:
-    fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    scatter(ax, df["Stay"].to_numpy(), df["InfctRsk"].to_numpy())
-    ax.set_xlabel("tempo médio de internação, em dias (Stay)")
-    ax.set_ylabel("risco de infecção, em % (InfctRsk)")
-    ax.set_title("58 hospitais: internação vs risco de infecção")
-    save(fig, "03_dispersao_hospital.png")
-
-
-def plot_hospital_intervals(df: pd.DataFrame, model: RegressionResultsWrapper) -> None:
-    grid = pd.DataFrame({"Stay": np.linspace(df["Stay"].min(), df["Stay"].max(), 100)})
-    bands = model.get_prediction(grid).summary_frame(alpha=0.05)
-    fig, ax = plt.subplots(figsize=(7, 4.4))
-    stay = grid["Stay"].to_numpy()
-    ax.fill_between(stay, bands["obs_ci_lower"], bands["obs_ci_upper"], color=SERIES_2, alpha=0.10, linewidth=0, label="IP 95%: novo hospital")
-    ax.fill_between(stay, bands["mean_ci_lower"], bands["mean_ci_upper"], color=SERIES_2, alpha=0.30, linewidth=0, label="IC 95%: média dos hospitais")
-    ax.plot(stay, bands["mean"], color=SERIES_2, linewidth=2, label="reta de regressão")
-    scatter(ax, df["Stay"].to_numpy(), df["InfctRsk"].to_numpy(), label="hospitais observados")
-    ax.set_xlabel("tempo médio de internação, em dias (Stay)")
-    ax.set_ylabel("risco de infecção, em % (InfctRsk)")
-    ax.set_title("Reta, intervalo de confiança (IC) e de predição (IP)")
-    ax.legend(loc="upper left")
-    save(fig, "04_ic_ip_hospital.png")
-
-
-def plot_residual_histogram(model: RegressionResultsWrapper) -> None:
-    residuals = model.resid.to_numpy()
-    fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    ax.hist(residuals, bins=10, density=True, color=SERIES_1, edgecolor=SURFACE, linewidth=1.5, label="resíduos")
-    grid = np.linspace(residuals.min() - 1, residuals.max() + 1, 200)
-    normal = stats.norm.pdf(grid, loc=0, scale=residuals.std(ddof=2))
-    ax.plot(grid, normal, color=SERIES_2, linewidth=2, label="normal de referência")
-    ax.set_xlabel("resíduo (pontos percentuais de risco)")
-    ax.set_ylabel("densidade")
-    ax.set_title("Histograma dos resíduos (hospitais)")
-    ax.legend(loc="upper left")
-    save(fig, "05_histograma_residuos.png")
-
-
-def plot_residuals_vs_fitted(model: RegressionResultsWrapper) -> None:
-    fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    zero_line(ax)
-    scatter(ax, model.fittedvalues.to_numpy(), model.resid.to_numpy())
-    ax.set_xlabel("valor predito ŷ")
-    ax.set_ylabel("resíduo e")
-    ax.set_title("Resíduos vs valores preditos (hospitais)")
-    save(fig, "06_residuos_vs_preditos.png")
-
-
-def qq_points(sample: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    (theoretical, ordered), _ = stats.probplot(sample, dist="norm")
-    return theoretical, ordered
-
-
-def draw_qq(ax: Axes, sample: np.ndarray) -> None:
-    theoretical, ordered = qq_points(sample)
-    # Same reference as sm.qqplot(line="s"): mean + std * theoretical quantile
-    ax.plot(theoretical, sample.mean() + sample.std(ddof=1) * theoretical, color=SERIES_2, linewidth=2, zorder=2)
-    scatter(ax, theoretical, ordered)
-
-
-def plot_qqplot(model: RegressionResultsWrapper) -> None:
-    fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    draw_qq(ax, model.resid.to_numpy())
-    ax.set_xlabel("quantis teóricos da normal")
-    ax.set_ylabel("quantis dos resíduos")
-    ax.set_title("QQ-plot dos resíduos (hospitais)")
-    save(fig, "07_qqplot.png")
+def plot_hospital(fit: Fit) -> None:
+    # The report's own builders, so the guide shows exactly what the analysis produces; the guide adds titles
+    pages = [
+        (scatter_figure(fit.variables), "58 hospitais: internação vs risco de infecção", "03_dispersao_hospital.png"),
+        (icip_figure(fit), "Reta, intervalo de confiança (IC) e de predição (IP)", "04_ic_ip_hospital.png"),
+        (histogram_figure(fit), "Histograma dos resíduos (hospitais)", "05_histograma_residuos.png"),
+        (residuals_figure(fit), "Resíduos vs valores preditos (hospitais)", "06_residuos_vs_preditos.png"),
+        (qqplot_figure(fit), "QQ-plot dos resíduos (hospitais)", "07_qqplot.png"),
+    ]
+    for fig, title, name in pages:
+        fig.axes[0].set_title(title)
+        save(fig, name)
 
 
 def residual_scenarios(rng: np.random.Generator) -> list[Scenario]:
@@ -302,17 +202,14 @@ def plot_transformations(rng: np.random.Generator) -> None:
 
 def main() -> None:
     IMG.mkdir(exist_ok=True)
-    apply_style()
+    plt.rcParams.update(RC)
     rng = np.random.default_rng(501)
     hospital = load_hospital()
-    model = smf.ols("InfctRsk ~ Stay", data=hospital).fit()
+    stay = hospital["Stay"].rename("tempo médio de internação, em dias (Stay)")
+    risk = hospital["InfctRsk"].rename("risco de infecção, em % (InfctRsk)")
     plot_normal()
     plot_least_squares()
-    plot_hospital_scatter(hospital)
-    plot_hospital_intervals(hospital, model)
-    plot_residual_histogram(model)
-    plot_residuals_vs_fitted(model)
-    plot_qqplot(model)
+    plot_hospital(Fit.of(Variables(stay, risk)))
     plot_residual_patterns(residual_scenarios(rng))
     plot_qq_patterns(rng)
     plot_independence(rng)
