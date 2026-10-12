@@ -72,11 +72,87 @@ Na tarefa:
 Mini-exemplo usado no guia todo: notas de 5 alunos = `2, 4, 5, 4, 6`.
 
 - **Média** (*mean*): `x̄ = Σx / n` -> `(2 + 4 + 5 + 4 + 6) / 5 = 4.2`. O símbolo `Σ` quer dizer "some tudo".
-- **Desvio** (*deviation*): `valor - média`. Ex.: `2 - 4.2 = -2.2`. Soma dos desvios dá sempre 0 (positivos cancelam negativos) -> por isso se eleva ao quadrado.
-- **Variância** (*variance*): `s² = Σ(x - x̄)² / (n - 1)` -> `(4.84 + 0.04 + 0.64 + 0.04 + 3.24) / 4 = 8.8 / 4 = 2.2`.
-- **Desvio padrão** (*standard deviation*, SD): `s = √s²` -> `√2.2 = 1.483`. Mesma unidade dos dados: "uma nota típica fica ~1.5 ponto longe da média".
+- **Desvio** (*deviation*): `valor - média`. Ex.: `2 - 4.2 = -2.2`.
+- **Variância** (*variance*): `s² = Σ(x - x̄)² / (n - 1)` -> `8.8 / 4 = 2.2`. Passo a passo abaixo.
+- **Desvio padrão** (*standard deviation*, SD): `s = √s²` -> `√2.2 = 1.483`.
 
-Por que dividir por `n - 1` e não `n`? Ver [graus de liberdade](#18-graus-de-liberdade-degrees-of-freedom).
+**Variância passo a passo.** Mede o quanto os dados se espalham em volta da média.
+
+| nota `x` | desvio `x - x̄` | desvio² `(x - x̄)²` |
+| --- | --- | --- |
+| 2 | -2.2 | 4.84 |
+| 4 | -0.2 | 0.04 |
+| 5 | 0.8 | 0.64 |
+| 4 | -0.2 | 0.04 |
+| 6 | 1.8 | 3.24 |
+| **soma** | **0** | **8.80** |
+
+1. **Desvio:** distância de cada nota até a média, com sinal. Nota 2 está 2.2 abaixo; nota 6, 1.8 acima.
+2. **Eleva ao quadrado:** desvios somam **sempre 0** (positivos cancelam negativos), para qualquer dado. Somar desvio cru não mede nada. Quadrado deixa tudo positivo e pesa mais quem está longe: 2.2 vira 4.84, 0.2 vira só 0.04.
+3. **Soma:** `8.8` = espalhamento total.
+4. **Divide por `n - 1 = 4`:** espalhamento médio por nota = `2.2`.
+
+Leitura da fórmula: `Σ` = passo 3, `(x - x̄)²` = passos 1 e 2, `/ (n - 1)` = passo 4.
+
+**Por que `n - 1` e não `n`?** Dois motivos, explicados bem devagar.
+
+*Motivo 1: o último não escolhe nada.*
+
+Imagine 5 crianças dividindo 21 balas, e todas as balas têm que ser distribuídas.
+
+- A 1ª criança pega quantas quiser. A 2ª também. A 3ª também. A 4ª também.
+- A 5ª **não escolhe**: fica com o que sobrou. Se as 4 primeiras pegaram 15, a 5ª leva 6, e pronto.
+
+Só 4 crianças escolheram de verdade.
+
+**Por que a 5ª não escolhe?** Por causa de uma **regra**: o total tem que dar 21.
+
+- Sem regra (balas infinitas), as 5 escolheriam.
+- Com 1 regra, sobra 1 escolha a menos. Não importa qual criança: quem for por último fica presa. Quem prende é a regra, não a criança.
+
+**E qual é a regra nas notas?** A média. As 21 balas não são à toa: `2 + 4 + 5 + 4 + 6 = 21`. Saber que a média é 4.2 é o mesmo que saber que o total é `4.2 × 5 = 21`. Quando você calcula a média, você trava o total, igual às balas.
+
+Por isso os desvios **sempre somam 0**: `soma dos desvios = soma das notas - 5 × média = 21 - 21 = 0`. A média funciona como o meio de uma gangorra, onde o lado de baixo pesa igual ao de cima:
+
+- Notas abaixo de 4.2 (2, 4, 4): desvios `-2.2, -0.2, -0.2` -> total `-2.6`.
+- Notas acima de 4.2 (5, 6): desvios `0.8, 1.8` -> total `+2.6`.
+
+Então, conhecendo 4 desvios, o 5º já está decidido:
+
+- Os 4 primeiros desvios: `-2.2, -0.2, 0.8, -0.2`. Somados dão `-1.8`.
+- Para o total dar 0, o 5º **tem que ser** `1.8`. Ele não traz nenhuma novidade.
+
+Regra geral: **cada coisa que você calcula a partir dos dados é uma regra e trava 1 número.** A variância usa 1 coisa calculada (a média) -> `n - 1`. A regressão usa 2 (`b₀` e `b₁`) -> `n - 2`.
+
+Então, de 5 números, só 4 trazem informação nova. Por isso a conta divide por 4. Esse "quantos são livres" se chama [graus de liberdade](#18-graus-de-liberdade-degrees-of-freedom).
+
+*Motivo 2: o centro foi escolhido de um jeito que favorece a conta.*
+
+A variância mede a distância das notas até um **centro**. O centro certo seria a média de **todos** os alunos do mundo (a média da população), mas ninguém conhece esse número. Então usamos a média das 5 notas que temos, `4.2`.
+
+O problema: `4.2` é, de todos os centros possíveis, o que deixa as distâncias **menores**. Veja a soma dos desvios² para outros centros:
+
+| centro | soma dos desvios² |
+| --- | --- |
+| 4.0 | 9.0 |
+| **4.2** (média das 5 notas) | **8.8** (a menor de todas) |
+| 5.0 | 12.0 |
+
+Qualquer centro diferente de 4.2 dá uma soma maior. Como a média verdadeira quase nunca é exatamente 4.2, usar 4.2 deixa a conta **pequena demais**, como uma régua que mede a menos.
+
+Dividir por 4 em vez de 5 deixa o resultado um pouco **maior** e corrige esse erro.
+
+**Resumo para guardar:** divide por `n - 1` porque o último desvio não é livre e porque a média da amostra faz o espalhamento parecer menor do que é.
+
+**Por que tirar a raiz?** Unidade da variância é "nota ao quadrado": sozinha não diz nada. Raiz volta para a unidade dos dados: desvio padrão `1.483` = "uma nota típica fica ~1.5 ponto longe da média".
+
+**Para que serve:** comparar espalhamento. Turma B com notas `4, 4, 4, 5, 4` também tem média 4.2, mas desvios² = `0.04, 0.04, 0.04, 0.64, 0.04` -> soma 0.8 -> variância `0.8 / 4 = 0.2`. Mesma média, espalhamento 11x menor: turma homogênea vs turma dispersa.
+
+**Ligação com regressão:**
+
+- O `8.8` (soma antes de dividir) volta como **SSTO**, a variação total de Y que a reta tenta explicar ([seção 2.7](#27-ssto--ssr--sse-e-o-r²)).
+- No mini-exemplo a reta deixa `SSE = 2.4` sem explicar -> `R² = 1 - 2.4 / 8.8 = 0.727` (reta explica 72.7% do espalhamento).
+- **MSE** é a mesma ideia de variância, aplicada aos resíduos ([seção 2.6](#26-variância-do-erro-mse-e-s)).
 
 ```python
 import numpy as np
@@ -901,25 +977,25 @@ O que saber de cada um:
 | Alligators | 25 | |
 | ConcPatog | 105 | **3 linhas com concentração 0** -> `log10` quebra ([6.6](#66-armadilhas-das-transformações)); medidas agrupadas por estação, estágio e mês -> pense na premissa **I** ([5.5](#55-independência)) |
 
-Salvar com os nomes que o relatório espera. O `.tex` em `entrega_final/` puxa cada arquivo sozinho ao recompilar:
+Salvar com os nomes que o relatório espera. O `.tex` em `entrega_final/` puxa cada arquivo de `outputs/` sozinho ao recompilar. A dispersão já sai pronta com `uv run python -m atividade_1_regressao.scatter_plot` (gera os 3 datasets; para um só, troque `DatasetChoice.ALL` no `main`):
 
 | Arquivo | Conteúdo |
 |---|---|
-| `entrega_final/figuras/<dataset>_<etapa>_dispersao.png` | dispersão |
-| `entrega_final/tabelas/<dataset>_<etapa>_ols.txt` | `model.summary().as_text()` |
-| `entrega_final/figuras/<dataset>_<etapa>_icip.png` | reta + IC + IP |
-| `entrega_final/figuras/<dataset>_<etapa>_histograma.png` | histograma (não existe para treadwear) |
-| `entrega_final/figuras/<dataset>_<etapa>_residuos_preditos.png` | resíduo vs predito |
-| `entrega_final/figuras/<dataset>_<etapa>_qqplot.png` | QQ-plot |
+| `outputs/<dataset>/<etapa>_dispersao.png` | dispersão |
+| `outputs/<dataset>/<etapa>_ols.txt` | `model.summary().as_text()` |
+| `outputs/<dataset>/<etapa>_icip.png` | reta + IC + IP |
+| `outputs/<dataset>/<etapa>_histograma.png` | histograma (não existe para treadwear) |
+| `outputs/<dataset>/<etapa>_residuos_preditos.png` | resíduo vs predito |
+| `outputs/<dataset>/<etapa>_qqplot.png` | QQ-plot |
 
 `<dataset>` = `treadwear`, `alligators` ou `concpatog`. `<etapa>` = `original` ou `transformado`.
 
 ```python
 from pathlib import Path
 
-tables = Path("entrega_final/tabelas")
-tables.mkdir(parents=True, exist_ok=True)
-(tables / "treadwear_original_ols.txt").write_text(model.summary().as_text())
+outputs = Path("outputs/treadwear")
+outputs.mkdir(parents=True, exist_ok=True)
+(outputs / "original_ols.txt").write_text(model.summary().as_text())
 ```
 
 Antes de entregar:
