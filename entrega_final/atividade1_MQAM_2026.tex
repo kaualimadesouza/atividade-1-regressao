@@ -182,7 +182,12 @@ Deixamos o histograma dos resíduos de fora, como o enunciado orienta, porque co
 
 \subsubsection{Premissas LINE}
 
-No gráfico de resíduos vs. valores preditos os resíduos formam um U, positivos nas duas pontas, com uns 34 mils no pneu novo e 23 na última medição, e negativos em todo o meio, chegando a $-18$, o que mostra que a premissa de função linear é violada. Como essa curva domina o gráfico, fica difícil avaliar a variância, mas não aparece um formato de funil, então não vemos sinal claro de variância desigual. No QQ-plot os pontos do meio ficam abaixo da reta e os dois maiores resíduos bem acima dela, e como esses dois são justamente as pontas do U, o pneu novo e a última medição, supomos que o desvio venha da curvatura, e com só 9 observações não dá para afirmar nem descartar a normalidade. Para a independência os gráficos pedidos não ajudam, e como o STAT501 não diz se as medições vêm de um pneu só, supomos que sejam medidas sucessivas do mesmo pneu, caso em que o erro de uma medição tende a se repetir na seguinte e a premissa fica questionável.
+\begin{description}
+    \item[Linearidade (L)] \textit{Violada.} No gráfico de resíduos vs. valores preditos os resíduos formam um U, positivos nas duas pontas, com uns 34 mils no pneu novo e 23 na última medição, e negativos em todo o meio, chegando a $-18$.
+    \item[Independência (I)] \textit{Questionável.} Os gráficos pedidos não ajudam a avaliar essa premissa, e como o STAT501 não diz se as medições vêm de um pneu só, supomos que sejam medidas sucessivas do mesmo pneu, caso em que o erro de uma medição tende a se repetir na seguinte.
+    \item[Normalidade (N)] \textit{Inconclusiva.} No QQ-plot os pontos do meio ficam abaixo da reta e os dois maiores resíduos bem acima dela, e como esses dois são justamente as pontas do U, o pneu novo e a última medição, supomos que o desvio venha da curvatura, e com só 9 observações não dá para afirmar nem descartar a normalidade.
+    \item[Variância igual (E)] \textit{Parece atendida.} Como a curva domina o gráfico, fica difícil avaliar a variância, mas não aparece um formato de funil, então não vemos sinal claro de variância desigual.
+\end{description}
 
 \subsection{Exploração das transformações de escala}
 
@@ -222,7 +227,12 @@ Pelo mesmo motivo da análise preliminar, o histograma dos resíduos continua de
 
 \subsubsection{Premissas LINE}
 
-O gráfico de resíduos vs. valores preditos ainda mostra o mesmo U, positivo nas pontas e negativo no meio, mas os erros ficaram bem menores em proporção ao groove. No pneu novo o resíduo de 0,022 em $\log_{10}$ equivale a um erro de uns 5\%, contra 9\% no modelo original, e na última medição o erro caiu de cerca de 18\% para 4\%. Assim a premissa de linearidade passa a ser atendida só em parte, e como o gráfico continua sem formato de funil, a variância segue parecendo constante. O QQ-plot mantém o mesmo desvio de antes, com os dois maiores resíduos acima da reta, o que com 9 observações ainda não permite concluir sobre a normalidade. A ressalva sobre a independência continua valendo, porque a transformação não muda a forma como as medições foram feitas.
+\begin{description}
+    \item[Linearidade (L)] \textit{Atendida em parte.} O gráfico de resíduos vs. valores preditos ainda mostra o mesmo U, positivo nas pontas e negativo no meio, mas os erros ficaram bem menores em proporção ao groove, já que no pneu novo o resíduo de 0,022 em $\log_{10}$ equivale a um erro de uns 5\%, contra 9\% no modelo original, e na última medição o erro caiu de cerca de 18\% para 4\%.
+    \item[Independência (I)] \textit{Questionável.} A transformação não muda a forma como as medições foram feitas, então continua valendo a suposição de que são medidas sucessivas do mesmo pneu.
+    \item[Normalidade (N)] \textit{Inconclusiva.} O QQ-plot mantém o mesmo desvio de antes, com os dois maiores resíduos acima da reta, e com 9 observações ainda não dá para concluir sobre a normalidade.
+    \item[Variância igual (E)] \textit{Parece atendida.} O gráfico de resíduos continua sem formato de funil.
+\end{description}
 
 % =========================================================
 % ALLIGATORS
@@ -258,7 +268,12 @@ Com $R^2$ ajustado de 0,829 a reta explica uns 83\% da variação do weight, ent
 
 \subsubsection{Premissas LINE}
 
-No gráfico de resíduos vs. valores preditos os resíduos formam um U bem marcado, positivos para os menores valores preditos, negativos no meio e de novo muito positivos no maior jacaré, com resíduo de cerca de 166 libras, o que viola a premissa de linearidade. Com a curva dominando o gráfico fica difícil julgar a variância, mas os 3 maiores jacarés têm resíduos de $-83$, 4 e 166, uma faixa bem mais larga que a dos outros 22, entre $-56$ e 79, e supomos que a dispersão cresça com o tamanho do jacaré. O histograma é assimétrico à direita, com um resíduo isolado perto de 166, e o QQ-plot mostra a mesma coisa, com os menores resíduos acima da reta, os do meio abaixo e o de 166 bem acima na ponta, então a normalidade parece violada, e supomos que parte disso venha da curvatura que já quebra a linearidade. Quanto à independência, o STAT501 informa que os biólogos capturaram uma amostra aleatória de 25 jacarés, cada um sendo um animal diferente, então não há motivo para supor que o erro de um influencie o de outro e essa premissa parece razoável.
+\begin{description}
+    \item[Linearidade (L)] \textit{Violada.} No gráfico de resíduos vs. valores preditos os resíduos formam um U bem marcado, positivos para os menores valores preditos, negativos no meio e de novo muito positivos no maior jacaré, com resíduo de cerca de 166 libras.
+    \item[Independência (I)] \textit{Parece atendida.} O STAT501 informa que os biólogos capturaram uma amostra aleatória de 25 jacarés, cada um sendo um animal diferente, então não há motivo para supor que o erro de um influencie o de outro.
+    \item[Normalidade (N)] \textit{Parece violada.} O histograma é assimétrico à direita, com um resíduo isolado perto de 166, e o QQ-plot mostra a mesma coisa, com os menores resíduos acima da reta, os do meio abaixo e o de 166 bem acima na ponta, e supomos que parte disso venha da curvatura que já quebra a linearidade.
+    \item[Variância igual (E)] \textit{Parece violada.} Com a curva dominando o gráfico fica difícil julgar a variância, mas os 3 maiores jacarés têm resíduos de $-83$, 4 e 166, uma faixa bem mais larga que a dos outros 22, entre $-56$ e 79, e supomos que a dispersão cresça com o tamanho do jacaré.
+\end{description}
 
 \subsection{Exploração das transformações de escala}
 
@@ -298,7 +313,12 @@ Com a transformação o $R^2$ ajustado foi de 0,829 para 0,958, e, com base ness
 
 \subsubsection{Premissas LINE}
 
-O gráfico de resíduos vs. valores preditos passa a mostrar uma nuvem sem padrão em torno de zero, com resíduos entre cerca de $-0{,}13$ e $0{,}13$ e sem formato de funil, então as premissas de linearidade e de variância igual passam a ser atendidas. O histograma ficou próximo do formato de sino da normal de referência e no QQ-plot os pontos acompanham a reta de perto, inclusive nas pontas, então a normalidade também é atendida. A independência continua razoável pelo mesmo motivo da análise original, já que a transformação não muda a forma como os jacarés foram amostrados.
+\begin{description}
+    \item[Linearidade (L)] \textit{Atendida.} O gráfico de resíduos vs. valores preditos passa a mostrar uma nuvem sem padrão em torno de zero, com resíduos entre cerca de $-0{,}13$ e $0{,}13$.
+    \item[Independência (I)] \textit{Parece atendida.} Vale o mesmo motivo da análise original, já que a transformação não muda a forma como os jacarés foram amostrados.
+    \item[Normalidade (N)] \textit{Atendida.} O histograma ficou próximo do formato de sino da normal de referência e no QQ-plot os pontos acompanham a reta de perto, inclusive nas pontas.
+    \item[Variância igual (E)] \textit{Atendida.} Os resíduos não formam funil ao longo dos valores preditos, embora só 3 jacarés ocupem os maiores valores.
+\end{description}
 
 % =========================================================
 % CONCPATOG
@@ -334,7 +354,12 @@ A reta explica menos de 9\% da variação de CPatog2, com $R^2$ ajustado de apen
 
 \subsubsection{Premissas LINE}
 
-No gráfico de resíduos vs. valores preditos quase todos os pontos ficam empilhados numa faixa estreita de valores preditos, entre 130 mil e 200 mil, com resíduos que vão de cerca de $-160$ mil a mais de 2,7 milhões, e só o ponto com CPatog1 perto de 354 mil fica fora dessa faixa. Além disso, 84 dos 105 resíduos são negativos, com mediana perto de $-121$ mil, então a reta passa acima da maioria dos pontos, puxada por poucos valores enormes, o que junto com o gráfico de dispersão indica que a premissa de linearidade não é atendida. Com os pontos empilhados assim também não dá para avaliar se a variância é constante ao longo dos valores preditos. O histograma é extremamente assimétrico à direita, com quase todos os resíduos numa única barra perto de zero e uma cauda longa, e no QQ-plot os pontos formam uma curva bem longe da reta, o que viola a premissa de normalidade. Quanto à independência, as 105 amostras vêm de 3 estações acompanhadas nos 12 meses, com até uma amostra de cada estágio por estação e mês, e supomos que amostras da mesma estação e do mesmo mês tenham erros parecidos entre si, o que tornaria essa premissa questionável.
+\begin{description}
+    \item[Linearidade (L)] \textit{Violada.} No gráfico de resíduos vs. valores preditos quase todos os pontos ficam empilhados numa faixa estreita de valores preditos, entre 130 mil e 200 mil, com resíduos de cerca de $-160$ mil a mais de 2,7 milhões. Além disso, 84 dos 105 resíduos são negativos, com mediana perto de $-121$ mil, então a reta passa acima da maioria dos pontos, puxada por poucos valores enormes.
+    \item[Independência (I)] \textit{Questionável.} As 105 amostras vêm de 3 estações acompanhadas nos 12 meses, com até uma amostra de cada estágio por estação e mês, e supomos que amostras da mesma estação e do mesmo mês tenham erros parecidos entre si.
+    \item[Normalidade (N)] \textit{Violada.} O histograma é extremamente assimétrico à direita, com quase todos os resíduos numa única barra perto de zero e uma cauda longa, e no QQ-plot os pontos formam uma curva bem longe da reta.
+    \item[Variância igual (E)] \textit{Não dá para avaliar.} Com os pontos empilhados numa faixa tão estreita de valores preditos, e só o ponto com CPatog1 perto de 354 mil fora dela, não há como comparar a dispersão ao longo dos valores preditos.
+\end{description}
 
 \subsection{Exploração das transformações de escala}
 
@@ -374,7 +399,12 @@ O ganho no $R^2$ ajustado é grande, de 0,086 para 0,637, e, com base nesse indi
 
 \subsubsection{Premissas LINE}
 
-Os resíduos em $\log_{10}$ se espalham ao acaso em torno de zero, entre cerca de $-2{,}3$ e $2{,}0$, com mais ou menos a mesma largura ao longo dos valores preditos, o que indica que as premissas de linearidade e de variância igual passam a valer. A normalidade também passa a valer, com o histograma perto da curva de referência e o QQ-plot quase todo em cima da reta, tirando um leve desvio na cauda inferior. A independência continua questionável, porque a transformação não muda o fato de as amostras serem agrupadas por estação, estágio e mês.
+\begin{description}
+    \item[Linearidade (L)] \textit{Atendida.} Os resíduos em $\log_{10}$ se espalham ao acaso em torno de zero, entre cerca de $-2{,}3$ e $2{,}0$, sem nenhum padrão.
+    \item[Independência (I)] \textit{Questionável.} A transformação não muda o fato de as amostras serem agrupadas por estação, estágio e mês.
+    \item[Normalidade (N)] \textit{Atendida.} O histograma fica perto da curva de referência e o QQ-plot quase todo em cima da reta, tirando um leve desvio na cauda inferior.
+    \item[Variância igual (E)] \textit{Atendida.} A nuvem de resíduos tem mais ou menos a mesma largura ao longo dos valores preditos, sem formato de funil.
+\end{description}
 
 \begin{thebibliography}{99}
 
