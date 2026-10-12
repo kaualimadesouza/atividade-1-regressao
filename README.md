@@ -52,5 +52,5 @@ com IC e IP, o histograma, os resíduos vs preditos e o QQ-plot dos estágios `o
 e `transformacoes.tex` (o R² ajustado delas). A combinação do estágio `transformado` é o campo
 `chosen` de cada dataset em `datasets.py`.
 
-O relatório inclui sozinho cada arquivo de `outputs/`. Enquanto o arquivo não existe, o PDF
-mostra um quadro com o caminho esperado. Texto em vermelho é o que ainda falta escrever.
+O relatório inclui sozinho cada arquivo de `outputs/`, e a compilação para com erro se algum
+faltar.

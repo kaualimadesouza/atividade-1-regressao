@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \geometry{left=1.5cm, right=1.5cm, top=2.54cm, bottom=2.54cm}
-\usepackage{graphicx, setspace, amsmath, amssymb, titlesec, fancyhdr, parskip, indentfirst, etoolbox, caption, cite, xcolor}
+\usepackage{graphicx, setspace, amsmath, amssymb, titlesec, fancyhdr, parskip, indentfirst, etoolbox, caption, cite}
 \usepackage{verbatim}
 \usepackage{url}
 \usepackage{hyperref}
@@ -80,18 +80,11 @@
     \textbf{Escola de Artes, Ciências e Humanidades - Universidade de São Paulo}
 }
 
-% Red placeholders mark what still has to be written; none may survive the submission
-\newcommand{\pendente}[1]{\textcolor{red}{\textit{[#1]}}}
-
 % Title, course header and authors, the same in both versions
 \newcommand{\capa}{%
 \maketitle
 \vspace{-1.5cm}
 \thispagestyle{firstpage}
-
-% =========================================================
-% INTEGRANTES
-% =========================================================
 
 \begin{multicols}{2}
     \centering
@@ -104,12 +97,7 @@
 
 \end{multicols}
 
-\vspace{-0.2cm} % Ajuste de espaçamento vertical
-
-% =========================================================
-% CONTEÚDO
-% =========================================================
+\vspace{-0.2cm}
 
 \singlespacing
-\setlength{\parskip}{6pt}
 \setlength{\parindent}{0.5cm}}

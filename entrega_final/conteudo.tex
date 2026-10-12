@@ -1,11 +1,11 @@
 % The report's text, shared by atividade1_MQAM_2026.tex (one column) and
-% atividade1_MQAM_2026_2colunas.tex (two columns), which define its layout macros
+% atividade1_MQAM_2026_2colunas.tex (two columns), which define its layout macros and the dataset environment
 
 % =========================================================
 % TREADWEAR
 % =========================================================
 
-\dataset{Treadwear}
+\begin{dataset}{Treadwear}
 
 O \textit{dataset} Treadwear, apresentado na Subseção 4.4 do STAT501 \cite{stat501}, vem de um experimento de laboratório que relaciona a profundidade restante do sulco de um pneu (\texttt{groove}, em mils, variável resposta $Y$) com a distância rodada (\texttt{mileage}, em milhares de milhas, variável preditora $X$).
 
@@ -87,11 +87,13 @@ Pelo mesmo motivo da análise preliminar, o histograma dos resíduos continua de
     \item[Variância igual (E)] \textit{Parece atendida.} O gráfico de resíduos continua sem formato de funil.
 \end{description}
 
+\end{dataset}
+
 % =========================================================
 % ALLIGATORS
 % =========================================================
 
-\dataset{Alligators}
+\begin{dataset}{Alligators}
 
 O \textit{dataset} Alligators, apresentado na Subseção 4.7 do STAT501 \cite{stat501}, relaciona o peso de jacarés (\texttt{weight}, em libras, variável resposta $Y$) com o seu comprimento (\texttt{length}, em polegadas, variável preditora $X$), medidos numa amostra aleatória de 25 jacarés capturados por biólogos.
 
@@ -173,11 +175,13 @@ Com a transformação o $R^2$ ajustado foi de 0,829 para 0,958 (Tabela~\ref{tab:
     \item[Variância igual (E)] \textit{Atendida.} Os resíduos não formam funil ao longo dos valores preditos, embora só 3 jacarés ocupem os maiores valores.
 \end{description}
 
+\end{dataset}
+
 % =========================================================
 % CONCPATOG
 % =========================================================
 
-\dataset{ConcPatog}
+\begin{dataset}{ConcPatog}
 
 O \textit{dataset} ConcPatog traz as concentrações de dois protozoários em água de esgoto tratado, medidas em diferentes estações de tratamento, estágios e meses do ano. O interesse é verificar se é possível estimar, com razoável acurácia, a concentração do patógeno 2 (\texttt{CPatog2}, variável resposta $Y$) a partir da concentração do patógeno 1 (\texttt{CPatog1}, variável preditora $X$).
 
@@ -260,6 +264,8 @@ O ganho no $R^2$ ajustado é grande, de 0,086 para 0,637 (Tabela~\ref{tab:concpa
 \end{description}
 
 Voltando à pergunta que motiva o ConcPatog, como linearidade, normalidade e variância igual parecem atendidas na escala logarítmica, os intervalos da Figura~\ref{fig:concpatog-transformado-icip} podem ser usados, com a ressalva de que a independência continua questionável. Eles mostram que o modelo indica bem a tendência e a ordem de grandeza do CPatog2 típico, mas não estima o CPatog2 de uma amostra individual com razoável acurácia, já que o intervalo de predição de 95\% cobre mais de três ordens de grandeza.
+
+\end{dataset}
 
 \begin{thebibliography}{99}
 

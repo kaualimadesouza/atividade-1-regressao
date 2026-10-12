@@ -2,24 +2,20 @@
 
 \input{preambulo}
 
-% Includes ../outputs/<dataset>/<file> when it exists, otherwise a framed placeholder with the expected path
+% Plots from ../outputs/<dataset>/ at 60% of the text width; a missing file stops the build
 \newcommand{\figura}[4][0.6\textwidth]{%
     \begin{figure}[H]
         \centering
-        \IfFileExists{../outputs/#2}
-            {\includegraphics[width=#1]{../outputs/#2}}
-            {\fbox{\parbox[c][4cm][c]{#1}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#2}}}}}}
+        \includegraphics[width=#1]{../outputs/#2}
         \caption{#3}
         \label{fig:#4}
     \end{figure}}
 
-% Same fallback for the statsmodels summary, saved as text with model.summary().as_text()
+% The statsmodels summary, saved as text with model.summary().as_text()
 \newcommand{\tabelaols}[3]{%
     \begin{table}[H]
         \centering
-        \IfFileExists{../outputs/#1}
-            {\begin{minipage}{12cm}\footnotesize\verbatiminput{../outputs/#1}\end{minipage}}
-            {\fbox{\parbox[c][3cm][c]{12cm}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#1}}}}}}
+        \begin{minipage}{12cm}\footnotesize\verbatiminput{../outputs/#1}\end{minipage}
         \caption{#2}
         \label{tab:#3}
     \end{table}}
@@ -30,15 +26,13 @@
         \centering
         \renewcommand{\arraystretch}{1.2}
         \small
-        \IfFileExists{../outputs/#1}
-            {\input{../outputs/#1}}
-            {\fbox{\parbox[c][3cm][c]{12cm}{\centering\textcolor{red}{\texttt{\detokenize{../outputs/#1}}}}}}
+        \input{../outputs/#1}
         \caption{#2}
         \label{tab:#3}
     \end{table}}
 
-% A dataset opens a new section; the 3x3 grid of step 3.2 takes the whole text width
-\newcommand{\dataset}[1]{\section{Dataset #1}}
+% A dataset is a section; the 3x3 grid of step 3.2 takes the whole text width
+\newenvironment{dataset}[1]{\section{Dataset #1}}{}
 \newcommand{\figuralarga}[3]{\figura[\textwidth]{#1}{#2}{#3}}
 
 \begin{document}

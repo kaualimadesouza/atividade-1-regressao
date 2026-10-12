@@ -1002,7 +1002,6 @@ outputs.mkdir(parents=True, exist_ok=True)
 
 Antes de entregar:
 
-- [ ] Nenhum texto vermelho (`\pendente`) sobrando no PDF.
 - [ ] Nome completo e Número USP dos dois na 1ª página.
 - [ ] Nenhum código Python no relatório (o enunciado proíbe).
 - [ ] Prazo: **13/10**, pelo e-disciplinas, só um da dupla envia.
