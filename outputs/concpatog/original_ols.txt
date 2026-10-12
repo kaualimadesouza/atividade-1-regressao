@@ -3,8 +3,8 @@
 Dep. Variable:                CPatog2   R-squared:                       0.095
 Model:                            OLS   Adj. R-squared:                  0.086
 Method:                 Least Squares   F-statistic:                     10.81
-Date:                Sun, 11 Oct 2026   Prob (F-statistic):            0.00138
-Time:                        23:22:16   Log-Likelihood:                -1497.3
+                                        Prob (F-statistic):            0.00138
+                                        Log-Likelihood:                -1497.3
 No. Observations:                 105   AIC:                             2999.
 Df Residuals:                     103   BIC:                             3004.
 Df Model:                           1                                         

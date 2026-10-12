@@ -3,8 +3,8 @@
 Dep. Variable:          log10(groove)   R-squared:                       0.993
 Model:                            OLS   Adj. R-squared:                  0.992
 Method:                 Least Squares   F-statistic:                     976.3
-Date:                Sun, 11 Oct 2026   Prob (F-statistic):           8.88e-09
-Time:                        23:22:14   Log-Likelihood:                 27.570
+                                        Prob (F-statistic):           8.88e-09
+                                        Log-Likelihood:                 27.570
 No. Observations:                   9   AIC:                            -51.14
 Df Residuals:                       7   BIC:                            -50.75
 Df Model:                           1                                         

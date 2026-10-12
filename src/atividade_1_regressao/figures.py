@@ -7,7 +7,7 @@ from scipy import stats
 
 from atividade_1_regressao.regression import Explored, Fit
 from atividade_1_regressao.style import SERIES_1, SERIES_2, SURFACE, scatter, styled, zero_line
-from atividade_1_regressao.variables import Target, Transform, Variables
+from atividade_1_regressao.variables import TRANSFORMS, Target, Variables
 
 
 @styled
@@ -26,7 +26,7 @@ def icip_figure(fit: Fit) -> Figure:
     """Data, fitted line, 95% band for the mean (IC, narrow) and for a new point (IP, wide)."""
     x, y = fit.variables.x, fit.variables.y
     grid = np.linspace(x.min(), x.max(), 100)
-    bands = fit.model.get_prediction(np.column_stack([np.ones_like(grid), grid])).summary_frame(alpha=0.05)
+    bands = fit.bands(grid)
     fig = Figure(figsize=(7, 4.4), layout="tight")
     ax = fig.subplots()
     ax.fill_between(grid, bands["obs_ci_lower"], bands["obs_ci_upper"], color=SERIES_2, alpha=0.10, linewidth=0, label="IP 95%: nova observação")
@@ -43,7 +43,7 @@ def icip_figure(fit: Fit) -> Figure:
 def histogram_figure(fit: Fit) -> Figure:
     """Residual histogram over the normal curve they should follow (mean 0, residual std)."""
     residuals = fit.model.resid.to_numpy()
-    spread = residuals.std(ddof=2)  # n - 2: the residual standard error of a line with two coefficients
+    spread = np.sqrt(fit.model.mse_resid)
     grid = np.linspace(residuals.min() - spread, residuals.max() + spread, 200)
     fig = Figure(figsize=(6.4, 4.2), layout="tight")
     ax = fig.subplots()
@@ -90,7 +90,7 @@ def qqplot_figure(fit: Fit) -> Figure:
 def exploration_figure(results: list[Explored]) -> Figure:
     """3x3 grid, one scatter + line per rescaling. Row = transform, column = X, Y or both."""
     fig = Figure(figsize=(9.5, 8.5), layout="tight")
-    axes = fig.subplots(len(Transform), len(Target))
+    axes = fig.subplots(len(TRANSFORMS), len(Target))
     for ax, result in zip(axes.flat, results, strict=True):
         fit, combination = result.fit, result.combination
         scatter(ax, fit.variables.x, fit.variables.y)
@@ -98,12 +98,12 @@ def exploration_figure(results: list[Explored]) -> Figure:
         ax.set_xlabel(str(fit.variables.x.name))
         ax.set_ylabel(str(fit.variables.y.name))
         ax.set_title(
-            f"{combination.transform.value.title} em {combination.target.value}\n"
-            f"R² ajustado {decimal(fit.model.rsquared_adj)}, n = {int(fit.model.nobs)}"
+            f"{combination.transform.title} em {combination.target.value}\n"
+            f"R² ajustado {comma_decimal(fit.model.rsquared_adj)}, n = {int(fit.model.nobs)}"
         )
     return fig
 
 
-def decimal(value: float) -> str:
+def comma_decimal(value: float) -> str:
     """4 decimals, Brazilian comma: 0.9583 -> "0,9583"."""
     return f"{value:.4f}".replace(".", ",")

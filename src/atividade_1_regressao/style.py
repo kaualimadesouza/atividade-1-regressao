@@ -47,7 +47,7 @@ RC = {
 
 
 def styled[**P](build: Callable[P, Figure]) -> Callable[P, Figure]:
-    """Decorator: run a figure builder under RC. Whole body inside, since rc is read per artist."""
+    """Decorator: build the figure with RC active, so every artist gets the shared look."""
 
     @wraps(build)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> Figure:

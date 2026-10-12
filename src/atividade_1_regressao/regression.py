@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass
 
+import numpy as np
+import pandas as pd
 import statsmodels.api as sm
 from statsmodels.regression.linear_model import RegressionResultsWrapper
 
@@ -19,6 +21,10 @@ class Fit:
     def of(cls, variables: Variables) -> "Fit":
         """Fit y = b0 + b1 * x by ordinary least squares."""
         return cls(variables, sm.OLS(variables.y, sm.add_constant(variables.x)).fit())
+
+    def bands(self, x: np.ndarray) -> pd.DataFrame:
+        """Line value plus 95% IC (mean) and IP (new point) at each x, as statsmodels names them."""
+        return self.model.get_prediction(sm.add_constant(x)).summary_frame(alpha=0.05)
 
 
 @dataclass(frozen=True)

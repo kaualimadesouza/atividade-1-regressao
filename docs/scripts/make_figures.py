@@ -28,12 +28,15 @@ HOSPITAL = DOCS / "data" / "hospitalinfct_reg1and2.txt"
 
 @dataclass(frozen=True)
 class Scenario:
+    """A made-up dataset for the residual-pattern figure."""
+
     title: str
     x: np.ndarray
     y: np.ndarray
 
 
 def save(fig: Figure, name: str) -> None:
+    """Write docs/img/<name> at 150 dpi, close the figure and print the path."""
     fig.tight_layout()
     fig.savefig(IMG / name, dpi=150)
     plt.close(fig)
@@ -41,11 +44,13 @@ def save(fig: Figure, name: str) -> None:
 
 
 def fit_line(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:
+    """Least-squares (intercept, slope), quick version for the synthetic examples."""
     slope, intercept = np.polyfit(x, y, 1)
     return float(intercept), float(slope)
 
 
 def plot_normal() -> None:
+    """Fig 01: the bell curve with the 68% and 95% areas shaded."""
     z = np.linspace(-4, 4, 400)
     density = stats.norm.pdf(z)
     fig, ax = plt.subplots(figsize=(7, 3.6))
@@ -63,6 +68,7 @@ def plot_normal() -> None:
 
 
 def plot_least_squares() -> None:
+    """Fig 02: five points, the fitted line and one residual labelled."""
     hours = np.array([1, 2, 3, 4, 5], dtype=float)
     grade = np.array([2, 4, 5, 4, 6], dtype=float)
     b0, b1 = fit_line(hours, grade)
@@ -87,12 +93,8 @@ def plot_least_squares() -> None:
     save(fig, "02_minimos_quadrados.png")
 
 
-def load_hospital() -> pd.DataFrame:
-    return pd.read_csv(HOSPITAL, sep="\t")
-
-
 def plot_hospital(fit: Fit) -> None:
-    # The report's own builders, so the guide shows exactly what the analysis produces; the guide adds titles
+    """Figs 03 to 07 with the report's own builders, so the guide shows what the analysis produces."""
     pages = [
         (scatter_figure(fit.variables), "58 hospitais: internação vs risco de infecção", "03_dispersao_hospital.png"),
         (icip_figure(fit), "Reta, intervalo de confiança (IC) e de predição (IP)", "04_ic_ip_hospital.png"),
@@ -106,6 +108,7 @@ def plot_hospital(fit: Fit) -> None:
 
 
 def residual_scenarios(rng: np.random.Generator) -> list[Scenario]:
+    """Four synthetic cases: fine, curve, funnel, one outlier."""
     x = np.sort(rng.uniform(0, 10, 60))
     outlier_y = 2 + 0.8 * x + rng.normal(0, 1, x.size)
     outlier_y[30] += 9
@@ -118,6 +121,7 @@ def residual_scenarios(rng: np.random.Generator) -> list[Scenario]:
 
 
 def plot_residual_patterns(scenarios: list[Scenario]) -> None:
+    """Fig 08: each scenario as data + line (top) and residual vs fitted (bottom)."""
     fig, axes = plt.subplots(2, len(scenarios), figsize=(14, 6.2))
     for column, scenario in enumerate(scenarios):
         b0, b1 = fit_line(scenario.x, scenario.y)
@@ -136,6 +140,7 @@ def plot_residual_patterns(scenarios: list[Scenario]) -> None:
 
 
 def plot_qq_patterns(rng: np.random.Generator) -> None:
+    """Fig 09: QQ-plots of normal, outlier, skewed and heavy-tailed samples."""
     with_outlier = rng.normal(0, 1, 80)
     with_outlier[0] = 5.5
     samples = [
@@ -154,6 +159,7 @@ def plot_qq_patterns(rng: np.random.Generator) -> None:
 
 
 def plot_independence(rng: np.random.Generator) -> None:
+    """Fig 10: residuals in collection order, independent vs trend vs serial correlation."""
     order = np.arange(1, 51)
     autocorrelated = np.zeros(order.size)
     for i in range(1, order.size):
@@ -175,6 +181,7 @@ def plot_independence(rng: np.random.Generator) -> None:
 
 
 def plot_transformations(rng: np.random.Generator) -> None:
+    """Fig 11: one exponential-ish dataset under the original scale and the 9 rescalings."""
     x = np.sort(rng.uniform(1, 10, 50))
     y = 10 ** (0.5 + 0.15 * x + rng.normal(0, 0.08, x.size))
     combos = [
@@ -201,10 +208,11 @@ def plot_transformations(rng: np.random.Generator) -> None:
 
 
 def main() -> None:
+    """Regenerate every guide figure in docs/img/, same random seed every time."""
     IMG.mkdir(exist_ok=True)
     plt.rcParams.update(RC)
     rng = np.random.default_rng(501)
-    hospital = load_hospital()
+    hospital = pd.read_csv(HOSPITAL, sep="\t")
     stay = hospital["Stay"].rename("tempo médio de internação, em dias (Stay)")
     risk = hospital["InfctRsk"].rename("risco de infecção, em % (InfctRsk)")
     plot_normal()

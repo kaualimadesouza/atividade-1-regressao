@@ -3,8 +3,8 @@
 Dep. Variable:          log10(weight)   R-squared:                       0.960
 Model:                            OLS   Adj. R-squared:                  0.958
 Method:                 Least Squares   F-statistic:                     553.0
-Date:                Sun, 11 Oct 2026   Prob (F-statistic):           1.38e-17
-Time:                        23:22:15   Log-Likelihood:                 33.965
+                                        Prob (F-statistic):           1.38e-17
+                                        Log-Likelihood:                 33.965
 No. Observations:                  25   AIC:                            -63.93
 Df Residuals:                      23   BIC:                            -61.49
 Df Model:                           1                                         

@@ -1,13 +1,13 @@
 """Write the report's outputs for every dataset: `uv run python -m atividade_1_regressao`."""
 
-from atividade_1_regressao.datasets import DATASETS, OUTPUTS_DIR, ROOT
-from atividade_1_regressao.report import run
+from atividade_1_regressao.datasets import DATASETS
+from atividade_1_regressao.report import write_dataset
 
 
 def main() -> None:
     """Regenerate outputs/ for the 3 datasets and print each file written."""
-    for path in run(list(DATASETS), OUTPUTS_DIR):
-        print(path.relative_to(ROOT))
+    for dataset in DATASETS:
+        write_dataset(dataset)
 
 
 if __name__ == "__main__":
